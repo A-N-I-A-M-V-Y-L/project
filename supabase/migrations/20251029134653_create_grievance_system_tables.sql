@@ -1,3 +1,15 @@
+-- ===================================================================
+-- RESET: Safely drop old tables and all their related policies
+-- The "CASCADE" part is important: it removes old RLS, indexes, etc.
+-- ===================================================================
+DROP TABLE IF EXISTS public.grievances CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
+
+
+-- ===================================================================
+-- ORIGINAL SCRIPT (This is your excellent code)
+-- ===================================================================
+
 /*
   # College Grievance Management System Database Schema
 
@@ -15,7 +27,7 @@
   - `full_name` (text, not null) - User's complete name
   - `user_id` (text, not null) - Student ID, Faculty ID, or Admin ID
   - `department` (text) - Department name
-  - `created_at` (timestamptz) - Account creation timestamp
+  - `created_at` (timestamlptz) - Account creation timestamp
 
   ### grievances
   Stores all submitted grievances with detailed tracking
@@ -68,7 +80,7 @@ CREATE TABLE IF NOT EXISTS grievances (
   grievance_id text UNIQUE NOT NULL,
   submitted_by uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title text NOT NULL,
-  description text NOT NULL,
+  description text NOT null,
   category text NOT NULL CHECK (category IN ('Academic', 'Facility', 'Examination', 'Placement', 'Other')),
   status text NOT NULL DEFAULT 'Submitted' CHECK (status IN ('Submitted', 'In Progress', 'Resolved', 'Closed')),
   created_at timestamptz DEFAULT now(),
@@ -229,3 +241,4 @@ CREATE POLICY "Admins can delete grievances"
       AND users.role = 'Admin'
     )
   );
+
